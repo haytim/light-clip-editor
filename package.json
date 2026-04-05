@@ -1,0 +1,19 @@
+{
+  "name": "light-video-editor",
+  "version": "0.1.0",
+  "description": "Super lightweight desktop video editor (compress, merge, volume adjust)",
+  "main": "dist/electron/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.electron.json && tsc -p tsconfig.renderer.json && node scripts/copy-static.mjs",
+    "start": "npm run build && electron .",
+    "dev": "npm run build && electron ."
+  },
+  "dependencies": {
+    "electron": "^31.0.0",
+    "ffmpeg-static": "^5.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  }
+}

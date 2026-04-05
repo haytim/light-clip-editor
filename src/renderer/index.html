@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Light Video Editor</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <input id="nativeSinglePicker" class="hidden-picker" type="file" accept="video/*" />
+
+    <main class="container">
+      <header class="app-head">
+        <div>
+          <h1>Light Video Editor</h1>
+          <p class="subtitle">Lightweight video editor for doing small edits to clips quickly :), made by tim.</p>
+        </div>
+      </header>
+
+      <div class="workspace-layout">
+        <section class="workspace-main">
+          <nav class="tabs" aria-label="Feature tabs">
+            <button class="tab-btn active" data-tab="cutTab">Cut + Preview</button>
+            <button class="tab-btn" data-tab="compressTab">Compress</button>
+            <button class="tab-btn" data-tab="mergeTab">Merge</button>
+            <button class="tab-btn" data-tab="cropTab">Crop</button>
+            <button class="tab-btn" data-tab="volumeTab">Audio</button>
+            <button class="tab-btn" data-tab="mp3Tab">MP4 to MP3</button>
+          </nav>
+
+          <section id="cutTab" class="panel tab-panel active">
+            <h2>Cut + Preview</h2>
+            <div class="cut-layout">
+              <div class="card">
+                <div class="field-block">
+                  <label class="field-label" for="cutInputManual">Input video</label>
+                  <div class="input-with-action">
+                    <input id="cutInputManual" type="text" placeholder="Paste path or click Browse" />
+                    <button id="cutInputBtn">Browse</button>
+                  </div>
+                </div>
+
+                <div class="field-block">
+                  <label class="field-label" for="cutOutputManual">Output video</label>
+                  <div class="input-with-action">
+                    <input id="cutOutputManual" type="text" placeholder="Choose destination .mp4" />
+                    <button id="cutOutputBtn">Browse</button>
+                  </div>
+                </div>
+
+                <h3>Trim</h3>
+                <div class="time-grid">
+                  <div class="field-block">
+                    <label class="field-label" for="cutStartInput">Start</label>
+                    <input id="cutStartInput" type="text" value="00:00:05.000" />
+                  </div>
+                  <div class="field-block">
+                    <label class="field-label" for="cutEndInput">End</label>
+                    <input id="cutEndInput" type="text" value="00:00:15.000" />
+                  </div>
+                </div>
+
+                <div class="field-block">
+                  <label class="field-label" for="cutModeInput">Mode</label>
+                  <select id="cutModeInput">
+                    <option value="lossless" selected>Lossless (fast, keyframe based)</option>
+                    <option value="reencode">Re-encode (slower, frame accurate)</option>
+                  </select>
+                </div>
+                <div class="panel-actions">
+                  <button id="cutRunBtn" class="run">Run Cut</button>
+                </div>
+              </div>
+
+              <div class="card preview-card">
+                <h3>Preview</h3>
+                <div class="preview-wrap">
+                  <video id="previewVideo" controls preload="metadata" playsinline></video>
+                  <div class="preview-meta">
+                    <div class="preview-readout">
+                      <span id="currentTimeText">Current: 00:00:00.000</span>
+                      <span id="previewStatusText">Preview not loaded</span>
+                    </div>
+                    <div class="preview-actions">
+                      <button id="setStartFromCurrentBtn">Use Current as Start</button>
+                      <button id="setEndFromCurrentBtn">Use Current as End</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="compressTab" class="panel tab-panel">
+            <h2>Compress</h2>
+            <div class="row">
+              <button id="compressInputBtn">Pick Input Video</button>
+              <input id="compressInputManual" type="text" placeholder="Or paste input path" />
+            </div>
+            <div class="row">
+              <button id="compressOutputBtn">Pick Output</button>
+              <input id="compressOutputManual" type="text" placeholder="Or paste output path" />
+            </div>
+            <div class="row settings">
+              <label for="targetSizeInput">Target Size (MB)</label>
+              <input id="targetSizeInput" type="number" min="1" max="200" step="0.1" value="9.8" />
+              <label for="presetInput">Preset</label>
+              <select id="presetInput">
+                <option value="ultrafast">ultrafast</option>
+                <option value="fast">fast</option>
+                <option value="medium" selected>medium</option>
+                <option value="slow">slow</option>
+              </select>
+            </div>
+            <div class="panel-actions">
+              <button id="compressRunBtn" class="run">Run Compression</button>
+            </div>
+          </section>
+
+          <section id="mergeTab" class="panel tab-panel">
+            <h2>Merge Videos</h2>
+            <div class="row settings">
+              <label for="mergeCountInput">How many videos</label>
+              <select id="mergeCountInput">
+                <option value="2" selected>2 videos</option>
+                <option value="3">3 videos</option>
+                <option value="4">4 videos</option>
+                <option value="5">5 videos</option>
+                <option value="6">6 videos</option>
+              </select>
+            </div>
+
+            <div class="merge-slots">
+              <div class="row merge-slot" data-slot="1">
+                <label class="slot-label" for="mergeInput1Manual">Video 1</label>
+                <button id="mergeInput1Btn">Pick Video 1</button>
+                <input id="mergeInput1Manual" type="text" placeholder="Path for video 1" />
+              </div>
+              <div class="row merge-slot" data-slot="2">
+                <label class="slot-label" for="mergeInput2Manual">Video 2</label>
+                <button id="mergeInput2Btn">Pick Video 2</button>
+                <input id="mergeInput2Manual" type="text" placeholder="Path for video 2" />
+              </div>
+              <div class="row merge-slot" data-slot="3">
+                <label class="slot-label" for="mergeInput3Manual">Video 3</label>
+                <button id="mergeInput3Btn">Pick Video 3</button>
+                <input id="mergeInput3Manual" type="text" placeholder="Path for video 3" />
+              </div>
+              <div class="row merge-slot" data-slot="4">
+                <label class="slot-label" for="mergeInput4Manual">Video 4</label>
+                <button id="mergeInput4Btn">Pick Video 4</button>
+                <input id="mergeInput4Manual" type="text" placeholder="Path for video 4" />
+              </div>
+              <div class="row merge-slot" data-slot="5">
+                <label class="slot-label" for="mergeInput5Manual">Video 5</label>
+                <button id="mergeInput5Btn">Pick Video 5</button>
+                <input id="mergeInput5Manual" type="text" placeholder="Path for video 5" />
+              </div>
+              <div class="row merge-slot" data-slot="6">
+                <label class="slot-label" for="mergeInput6Manual">Video 6</label>
+                <button id="mergeInput6Btn">Pick Video 6</button>
+                <input id="mergeInput6Manual" type="text" placeholder="Path for video 6" />
+              </div>
+            </div>
+
+            <p class="helper-text">Merge order: Video 1, then Video 2, and so on.</p>
+            <div class="row">
+              <button id="mergeOutputBtn">Pick Output</button>
+              <input id="mergeOutputManual" type="text" placeholder="Or paste output path" />
+            </div>
+            <div class="row settings">
+              <label for="mergeModeInput">Merge mode</label>
+              <select id="mergeModeInput">
+                <option value="universal" selected>Universal (re-encode, recommended)</option>
+                <option value="stream-copy">Fast copy (requires matching codecs)</option>
+              </select>
+            </div>
+            <div class="panel-actions">
+              <button id="mergeRunBtn" class="run">Run Merge</button>
+            </div>
+          </section>
+
+          <section id="cropTab" class="panel tab-panel">
+            <h2>Crop Video</h2>
+            <div class="cut-layout crop-layout">
+              <div class="card">
+                <div class="field-block">
+                  <label class="field-label" for="cropInputManual">Input video</label>
+                  <div class="input-with-action">
+                    <input id="cropInputManual" type="text" placeholder="Paste path or click Browse" />
+                    <button id="cropInputBtn">Browse</button>
+                  </div>
+                </div>
+
+                <div class="field-block">
+                  <label class="field-label" for="cropOutputManual">Output video</label>
+                  <div class="input-with-action">
+                    <input id="cropOutputManual" type="text" placeholder="Choose destination .mp4" />
+                    <button id="cropOutputBtn">Browse</button>
+                  </div>
+                </div>
+
+                <h3>Crop Rectangle (px)</h3>
+                <div class="time-grid">
+                  <div class="field-block">
+                    <label class="field-label" for="cropXInput">X</label>
+                    <input id="cropXInput" type="number" min="0" step="1" value="0" />
+                  </div>
+                  <div class="field-block">
+                    <label class="field-label" for="cropYInput">Y</label>
+                    <input id="cropYInput" type="number" min="0" step="1" value="0" />
+                  </div>
+                </div>
+
+                <div class="time-grid">
+                  <div class="field-block">
+                    <label class="field-label" for="cropWidthInput">Width</label>
+                    <input id="cropWidthInput" type="number" min="2" step="1" value="0" />
+                  </div>
+                  <div class="field-block">
+                    <label class="field-label" for="cropHeightInput">Height</label>
+                    <input id="cropHeightInput" type="number" min="2" step="1" value="0" />
+                  </div>
+                </div>
+
+                <div class="panel-actions panel-actions-split">
+                  <button id="cropResetBtn">Reset Selection</button>
+                  <button id="cropRunBtn" class="run">Run Crop</button>
+                </div>
+              </div>
+
+              <div class="card preview-card">
+                <h3>Crop Selection</h3>
+                <div id="cropStage" class="crop-stage">
+                  <video id="cropPreviewVideo" preload="metadata" playsinline></video>
+                  <div id="cropOverlayLayer" class="crop-overlay" aria-label="Crop overlay">
+                    <div id="cropSelection" class="crop-selection" role="presentation">
+                      <span id="cropResizeHandle" class="crop-resize-handle" aria-hidden="true"></span>
+                    </div>
+                  </div>
+                </div>
+                <p id="cropInfoText" class="helper-text">Load a video, then drag on the frame to create or adjust the crop area.</p>
+              </div>
+            </div>
+          </section>
+
+          <section id="volumeTab" class="panel tab-panel">
+            <h2>Audio Boost</h2>
+            <div class="row">
+              <button id="volumeInputBtn">Pick Input Video</button>
+              <input id="volumeInputManual" type="text" placeholder="Or paste input path" />
+            </div>
+            <div class="row">
+              <button id="volumeOutputBtn">Pick Output</button>
+              <input id="volumeOutputManual" type="text" placeholder="Or paste output path" />
+            </div>
+            <div class="row settings">
+              <label for="volumeDbInput">Gain (dB)</label>
+              <input id="volumeDbInput" type="number" min="-30" max="30" step="0.5" value="6" />
+            </div>
+            <div class="panel-actions">
+              <button id="volumeRunBtn" class="run">Apply Audio Gain</button>
+            </div>
+          </section>
+
+          <section id="mp3Tab" class="panel tab-panel">
+            <h2>MP4 to MP3</h2>
+            <div class="row">
+              <button id="mp3InputBtn">Pick Input MP4</button>
+              <input id="mp3InputManual" type="text" placeholder="Or paste input path" />
+            </div>
+            <div class="row">
+              <button id="mp3OutputBtn">Pick Output</button>
+              <input id="mp3OutputManual" type="text" placeholder="Or paste output path" />
+            </div>
+            <div class="row settings">
+              <label for="mp3BitrateInput">Bitrate (kbps)</label>
+              <select id="mp3BitrateInput">
+                <option value="128">128</option>
+                <option value="192" selected>192</option>
+                <option value="256">256</option>
+                <option value="320">320</option>
+              </select>
+            </div>
+            <div class="panel-actions">
+              <button id="mp3RunBtn" class="run">Convert to MP3</button>
+            </div>
+          </section>
+        </section>
+
+        <aside class="workspace-side">
+          <section class="status-panel">
+            <div class="status-head">
+              <span id="taskStatusText">Idle</span>
+              <span id="taskPercentText">0%</span>
+            </div>
+            <progress id="taskProgressBar" max="100" value="0"></progress>
+          </section>
+
+          <section class="panel activity-panel">
+            <div class="activity-head">
+              <h2>Activity</h2>
+              <button id="clearLogsBtn">Clear Logs</button>
+            </div>
+            <pre id="logOutput"></pre>
+          </section>
+        </aside>
+      </div>
+    </main>
+
+    <script src="./renderer.js" defer></script>
+  </body>
+</html>
